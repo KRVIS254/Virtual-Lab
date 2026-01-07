@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -601,7 +601,7 @@ else if (exp === "clipper" && part === "references") {
   </p>`;
 }
 else if(exp === "MOSFET" && part === "aim") {
-            content = `<p class="desc">To simulate the drain and transfer characteristics of a N-channel enhancement MOSFET and to determine its drain resistance (r<sub>d</sub>) and transconductance (g<sub>m</sub>).</p>`;
+            content = `<p class="desc">To simulate the drain and transfer characteristics of a MOSFET and to determine its drain resistance (r<sub>d</sub>) and transconductance (g<sub>m</sub>).</p>`;
         } 
         else if (exp === "MOSFET" && part === "theory") {
             content = `<p class="desc">
@@ -642,7 +642,6 @@ else if(exp === "MOSFET" && part === "aim") {
               (1 + λV<sub>DS</sub>)
           </li>
         </ul>
-           
 <img src="mosfetcircuit.png" alt="MOSFET" width="600">
 </p>`;
 }
@@ -812,4 +811,3 @@ else {
 
 </body>
 </html>
-
