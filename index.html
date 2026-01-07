@@ -601,13 +601,47 @@ else if (exp === "clipper" && part === "references") {
   </p>`;
 }
 else if(exp === "MOSFET" && part === "aim") {
-            content = `<p class="desc">To simulate the drain and transfer characteristics of a MOSFET and to determine its drain resistance (r<sub>d</sub>) and transconductance (g<sub>m</sub>).</p>`;
+            content = `<p class="desc">To simulate the drain and transfer characteristics of a N-channel enhancement MOSFET and to determine its drain resistance (r<sub>d</sub>) and transconductance (g<sub>m</sub>).</p>`;
         } 
         else if (exp === "MOSFET" && part === "theory") {
             content = `<p class="desc">
-               A MOSFET (Metal Oxide Semiconductor Field Effect Transistor) controls current flow between the drain and source terminals using a voltage applied at the gate. It can be n-channel or p-channel, depending on the type of charge carriers. MOSFETs operate in two modes:<br><br>
-                                                               <b>Enhancement mode: .</b> Normally OFF; turns ON when gate voltage exceeds the threshold.<br>
-                                                               <b>Depletion mode:.</b>  Normally ON; turns OFF when gate voltage is reduced below the threshold.</b><br>
+               <p>
+          An <b>N-Channel Enhancement MOSFET</b> operates by applying a gate-to-source voltage (V<sub>GS</sub>) 
+          to control the current flowing from drain (D) to source (S) through the induced channel. 
+          The minimum gate voltage required to form a conducting channel is called the <b>threshold voltage (V<sub>th</sub>)</b>.
+        </p>
+
+        <h3>Operating Regions</h3>
+
+        <h4>1. Cutoff Region (OFF state)</h4>
+        <ul>
+          <li><b>Condition:</b> V<sub>GS</sub> &lt; V<sub>th</sub></li>
+          <li>No channel is formed, drain current is nearly zero.</li>
+          <li><b>Equation:</b> I<sub>D</sub> ≈ 0</li>
+        </ul>
+
+        <h4>2. Linear (Ohmic / Triode) Region</h4>
+        <ul>
+          <li><b>Condition:</b> V<sub>GS</sub> &gt; V<sub>th</sub>, &nbsp; V<sub>DS</sub> &lt; (V<sub>GS</sub> - V<sub>th</sub>)</li>
+          <li>The MOSFET behaves like a <i>voltage-controlled resistor</i>.</li>
+          <li>
+            <b>Equation:</b><br>
+            I<sub>D</sub> = μ<sub>n</sub>C<sub>ox</sub> (W/L) 
+              [ (V<sub>GS</sub> - V<sub>th</sub>)V<sub>DS</sub> - V<sub>DS</sub><sup>2</sup>/2 ] 
+              (1 + λV<sub>DS</sub>)
+          </li>
+        </ul>
+
+        <h4>3. Saturation (Active) Region</h4>
+        <ul>
+          <li><b>Condition:</b> V<sub>GS</sub> &gt; V<sub>th</sub>, &nbsp; V<sub>DS</sub> ≥ (V<sub>GS</sub> - V<sub>th</sub>)</li>
+          <li>The channel is pinched off near the drain, MOSFET acts as a <i>current source</i>.</li>
+          <li>
+            <b>Equation:</b><br>
+            I<sub>D</sub> = ½ μ<sub>n</sub>C<sub>ox</sub> (W/L) (V<sub>GS</sub> - V<sub>th</sub>)<sup>2</sup> 
+              (1 + λV<sub>DS</sub>)
+          </li>
+        </ul>
            
 <img src="mosfetcircuit.png" alt="MOSFET" width="600">
 </p>`;
@@ -778,3 +812,4 @@ else {
 
 </body>
 </html>
+
