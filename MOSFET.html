@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MOSFET Lab - N-Channel Characteristics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <style>
+    :root { --primary: #7c3aed; --secondary: #10b981; --bg: #f8fafc; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; box-sizing: border-box; }
+    .container { width: 100%; display: flex; flex-wrap: wrap; gap: 15px; }
+    .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); box-sizing: border-box; }
+    .controls-card { flex: 1 1 320px; max-width: 100%; }
+    .results-card { flex: 2 1 450px; min-width: 300px; }
+    h3 { margin-top: 0; color: #1e293b; border-bottom: 2px solid var(--primary); padding-bottom: 5px; font-size: 1.1rem;}
+    .section-label { font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: bold; margin-bottom: 8px; display: block; }
+    .param-group { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px; margin-bottom: 12px; }
+    label { display: block; margin-bottom: 3px; font-weight: 600; font-size: 12px; color: #334155; }
+    .flex-input { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .flex-input input[type="range"] { flex: 1; height: 14px; cursor: pointer; }
+    .flex-input input[type="number"] { width: 65px; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; }
+    button { width: 100%; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; margin-bottom: 6px; font-size: 13px; }
+    #addBtn { background: var(--secondary); }
+    #plotBtn { background: var(--primary); }
+    #downloadBtn { background: #16a34a; }
+    #resetBtn { background: #ef4444; }
+    .table-container { max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid #eee; padding: 6px; text-align: center; }
+    th { background: #f8fafc; position: sticky; top: 0; }
+    .chart-wrapper { height: 320px; width: 100%; margin-top: 15px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <aside class="card controls-card">
+    <div style="text-align:center;margin-top:10px">
+      <img src="CIRCUIT_MOSFET.png" alt="MOSFET-CKT" style="max-width:70%;">
+    </div>
+    <h3>MOSFET Control Panel</h3>
+    
+    <label>Experiment Selection</label>
+    <select id="viewMode" style="width:100%; padding:6px; margin-bottom:15px; border-radius:4px;">
+      <option value="" disabled selected>Select Characteristics</option>
+      <option value="transfer">Transfer Characteristics (Iᴅ vs Vɢs)</option>
+      <option value="drain">Drain Characteristics (Iᴅ vs Vᴅs)</option>
+    </select>
+
+    <span class="section-label">Device Parameters</span>
+    <div class="param-group">
+      <label>Threshold Voltage V<sub>th</sub> (V):</label>
+      <div class="flex-input">
+        <input type="range" id="vth_s" min="0" max="5" step="0.1" value="0">
+        <input type="number" id="vth_n" value="0" step="0.1">
+      </div>
+    </div>
+
+    <span class="section-label">Voltage Controls</span>
+    
+    <div id="transferControls">
+      <label>Constant V<sub>DS</sub> (V):</label>
+      <div class="flex-input">
+        <input type="range" id="vds_const_s" min="0" max="20" step="1" value="0">
+        <input type="number" id="vds_const_n" value="0">
+      </div>
+      <label>Adjust V<sub>GS</sub> (V):</label>
+      <div class="flex-input">
+        <input type="range" id="vgs_adj_s" min="0" max="10" step="0.1" value="0">
+        <input type="number" id="vgs_adj_n" value="0" step="0.1">
+      </div>
+    </div>
+
+    <div id="drainControls" class="hidden">
+      <label>Constant V<sub>GS</sub> (V):</label>
+      <div class="flex-input">
+        <input type="range" id="vgs_const_s" min="0" max="10" step="0.5" value="0">
+        <input type="number" id="vgs_const_n" value="0">
+      </div>
+      <label>Adjust V<sub>DS</sub> (V):</label>
+      <div class="flex-input">
+        <input type="range" id="vds_adj_s" min="0" max="20" step="0.5" value="0">
+        <input type="number" id="vds_adj_n" value="0" step="0.5">
+      </div>
+    </div>
+
+    <button id="addBtn">Add Point</button>
+    <button id="plotBtn">Plot Characteristics</button>
+    <button id="downloadBtn">Download Excel</button>
+    <button id="resetBtn">Reset</button>
+  </aside>
+
+  <main class="card results-card">
+    <h3 id="panelTitle">Data Table</h3>
+    <div class="table-container">
+      <table id="dataTable">
+        <thead><tr id="tableHeader"><th>Voltage (V)</th><th>I<sub>D</sub> (mA)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="chartWrapper" class="chart-wrapper hidden">
+      <canvas id="mainChart"></canvas>
+    </div>
+  </main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let collectedData = [], chartInstance = null;
+
+// Improved Sync Function: Ensures slider and box always match
+function setupSync(sId, nId) {
+    const s = $(sId);
+    const n = $(nId);
+    s.addEventListener('input', () => { n.value = s.value; });
+    n.addEventListener('input', () => { s.value = n.value; });
+}
+
+// Initialize Sync after DOM is ready
+window.addEventListener('DOMContentLoaded', () => {
+    setupSync('vth_s', 'vth_n');
+    setupSync('vds_const_s', 'vds_const_n');
+    setupSync('vgs_adj_s', 'vgs_adj_n');
+    setupSync('vgs_const_s', 'vgs_const_n');
+    setupSync('vds_adj_s', 'vds_adj_n');
+});
+
+$('viewMode').onchange = (e) => {
+    const mode = e.target.value;
+    const isTransfer = mode === 'transfer';
+    $('transferControls').classList.toggle('hidden', !isTransfer);
+    $('drainControls').classList.toggle('hidden', isTransfer);
+    $('tableHeader').innerHTML = isTransfer ? "<th>VGS (V)</th><th>ID (mA)</th>" : "<th>VDS (V)</th><th>ID (mA)</th>";
+    clearData();
+};
+
+$('addBtn').onclick = () => {
+    const mode = $('viewMode').value;
+    if (!mode) return alert("Please select an experiment characteristics first.");
+
+    const vth = parseFloat($('vth_n').value);
+    const k = 2.0; // Device constant
+    let vgs, vds, id_mA;
+
+    if (mode === 'transfer') {
+        vgs = parseFloat($('vgs_adj_n').value);
+        vds = parseFloat($('vds_const_n').value);
+    } else {
+        vds = parseFloat($('vds_adj_n').value);
+        vgs = parseFloat($('vgs_const_n').value);
+    }
+
+    // MOSFET Physics Calculation
+    if (vgs <= vth || vds <= 0) {
+        id_mA = 0;
+    } else {
+        const v_ov = vgs - vth;
+        // Saturation model with smooth transition
+        const id_sat = 0.5 * k * Math.pow(v_ov, 2);
+        id_mA = id_sat * Math.tanh(3 * vds / (v_ov + 0.1));
+    }
+
+    collectedData.push({ x: mode === 'transfer' ? vgs : vds, y: id_mA });
+    collectedData.sort((a,b) => a.x - b.x);
+    updateTable();
+};
+
+function updateTable() {
+    $('dataTable').querySelector('tbody').innerHTML = collectedData.map(d => 
+        `<tr><td>${d.x.toFixed(2)}</td><td>${d.y.toFixed(3)}</td></tr>`
+    ).join('');
+}
+
+function clearData() {
+    collectedData = [];
+    updateTable();
+    if (chartInstance) chartInstance.destroy();
+    $('chartWrapper').classList.add('hidden');
+}
+
+$('resetBtn').onclick = () => {
+    $('viewMode').value = "";
+    $('transferControls').classList.remove('hidden');
+    $('drainControls').classList.add('hidden');
+    
+    // Reset all values to zero
+    const inputs = ['vth_s','vth_n','vds_const_s','vds_const_n','vgs_adj_s','vgs_adj_n','vgs_const_s','vgs_const_n','vds_adj_s','vds_adj_n'];
+    inputs.forEach(id => $(id).value = 0);
+    clearData();
+};
+$('downloadBtn').onclick = () => {
+    if (collectedData.length === 0) return alert("No data to download.");
+    const mode = $('viewMode').value;
+    const fileName = mode === 'transfer' ? "MOSFET transfer characteristics data.xlsx" : "MOSFET drain characteristics data.xlsx";
+    const ws = XLSX.utils.json_to_sheet(collectedData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "MOSFET_Data");
+    XLSX.writeFile(wb, fileName);
+};
+
+$('plotBtn').onclick = () => {
+    if (collectedData.length < 2) return alert("Please add at least 2 data points.");
+    $('chartWrapper').classList.remove('hidden');
+    if (chartInstance) chartInstance.destroy();
+    
+    const mode = $('viewMode').value;
+    chartInstance = new Chart($('mainChart'), {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: mode === 'transfer' ? 'ID vs VGS' : 'ID vs VDS',
+                data: collectedData,
+                borderColor: mode === 'transfer' ? '#7c3aed' : '#10b981',
+                tension: 0.3,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                x: { type: 'linear', title: { display: true, text: mode === 'transfer' ? 'VGS (V)' : 'VDS (V)' } },
+                y: { title: { display: true, text: 'ID (mA)' } }
+            }
+        }
+    });
+};
+</script>
+</body>
+</html>

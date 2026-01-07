@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>21ECC211L - Devices and Digital IC Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background-color: #f9fafc;
+        margin: 0;
+        color: #333;
+        line-height: 1.6;
+    }
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px;
+        background-color:  Purple;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+    .logo {
+        height: 100px;
+        width: auto;
+        margin-right: 15px;
+        padding: 6px;
+        background: green;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+    .header-photo {
+        height: 100px;
+        width: auto;
+        border-radius: 20px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        background-color:Silver;
+        border-bottom: 4px solid orange;
+        padding: 12px 20px;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .topbar a {
+        color: #007acc;
+        text-decoration: none;
+        margin-left: 25px;
+        font-weight: 600;
+    }
+    .topbar a:hover { color: #005a99; }
+    .container {
+        display: flex;
+        min-height: calc(100vh - 140px);
+    }
+    .sidebar {
+        background-color: white;
+        border-right: 1px solid #e0e0e0;
+        min-width: 220px;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.03);
+    }
+    .sidebar a {
+        display: block;
+        padding: 10px 12px;
+        color: #3b5875;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+    .sidebar a.active {
+        color: orange;
+        background-color: rgba(255,165,0,0.1);
+        font-weight: 600;
+    }
+    .sidebar a:hover {
+        background-color: #f3f6fa;
+        color: #007acc;
+    }
+    .rightbar {
+        background-color: white;
+        border-left: 1px solid #e0e0e0;
+        min-width: 220px;
+        padding: 20px;
+        display: none;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.03);
+    }
+    .rightbar a {
+        display: block;
+        padding: 10px 12px;
+        color: #3b5875;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+    .rightbar a:hover {
+        background-color: #f3f6fa;
+        color: #007acc;
+    }
+
+    .content-wrapper {
+        flex: 1;
+        background: linear-gradient(to bottom, #f9fafc 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    .wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 140px;
+        background: url('https://svgshare.com/i/14oY.svg') no-repeat bottom;
+        background-size: cover;
+        opacity: 0.15;
+    }
+    .content {
+        position: relative;
+        padding: 40px;
+        max-width: 950px;
+        margin: auto;
+    }
+    .card {
+        background: #fff;
+        padding: 30px 35px;
+        border-radius: 16px;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        backdrop-filter: blur(6px);
+        animation: fadeInUp 0.7s ease;
+    }
+    .title {
+        color: #2a75b5;
+        font-size: 28px;
+        margin-bottom: 18px;
+        font-weight: 700;
+        border-bottom: 3px solid #2a75b5;
+        display: inline-block;
+        padding-bottom: 5px;
+    }
+    .desc {
+        font-size: 16px;
+        text-align: justify;
+        color: #444;
+        line-height: 1.8;
+    }
+    .experiment-list ul {
+        list-style: none;
+        padding: 0;
+    }
+    .experiment-list li {
+        background: #f3f6fa;
+        margin: 10px 0;
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-weight: 500;
+        color: #333;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .experiment-list li:hover {
+        background: #e0e7ff;
+        color: #2a75b5;
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+<script>
+    // Show left menu content
+    function showContent(section, element) {
+        document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+        if(element) element.classList.add('active');
+
+        let content = "";
+        let rightbar = document.querySelector(".rightbar");
+        rightbar.style.display = "none"; // hide rightbar initially
+
+        if(section === "introduction") {
+            content = `<div class="card"><h2 class="title">Introduction</h2>
+            <p class="desc">The Devices and Digital IC Lab is a core part of the electronics curriculum, aimed at providing students with both theoretical understanding and practical hands-on experience in working with analog devices and digital integrated circuits. In this lab, students will study the characteristics and applications of PN junction diodes, Zener diodes, DC regulators, and rectifier circuits to gain insights into the fundamentals of power supplies and voltage regulation. They will also perform experiments on clipping circuits, BJT, and MOSFET characteristics to understand signal shaping, amplification, and switching behavior. On the digital front, students will work with binary adders, encoders, decoders, multiplexers, and demultiplexers, thereby developing a strong foundation in combinational logic design and its applications in real-world electronic systems. This lab emphasizes a balanced approach where students verify theoretical principles through experiments, and simultaneously acquire the practical skills necessary to design, construct, and troubleshoot both analog and digital circuits effectively.</p></div>`;
+        } else if(section === "objective") {
+            content = `<div class="card"><h2 class="title">Objective</h2>
+            <p class="desc">The objective of this laboratory course is to provide students with practical experience in the design, 
+                        assembly, and evaluation/testing of both analog and digital circuits. Students will explore devices such as 
+                        PN junction diodes, Zener diodes, DC regulators, rectifiers, BJTs, and MOSFETs to understand their 
+                        applications in power supplies, amplification, and switching. On the digital side, they will work with 
+                        adders, encoders, decoders, multiplexers, and demultiplexers, gaining essential skills to design and 
+                        troubleshoot combinational logic systems. This hands-on approach ensures that students bridge theoretical 
+                        concepts with real-world electronic applications.</p></div>`;
+        } else if(section === "experiments") {
+            content = `
+            <div class="card">
+                <h2 class="title">List of Experiments</h2>
+                <div class="experiment-list">
+                    <ul>
+                        <li onclick="loadExperiment('MOSFET')">1. MOSFET</li>
+                       
+                    </ul>
+                </div>
+            </div>`;
+        } else if(section === "audience") {
+            content = `<div class="card"><h2 class="title">Target Audience</h2>
+            <p class="desc">This lab is intended for undergraduate students in Electronics and Communication Engineering, Electrical Engineering, 
+                        and related fields. It is also beneficial for students pursuing interdisciplinary programs that involve 
+                        analog and digital electronics. The lab is designed to provide foundational skills for careers in 
+                        circuit design, embedded systems, and electronics research.</p></div>`;
+        } else if(section === "feedback") {
+                                           window.location.href = "feed1.html";
+        }
+
+          
+        
+        document.getElementById("main-content").innerHTML = content;
+    }
+
+    // Show experiment details menu (rightbar)
+    function loadExperiment(exp) {
+        const rightbar = document.querySelector(".rightbar");
+        rightbar.style.display = "block"; // show sidebar
+        rightbar.innerHTML = `
+            <a href="#" onclick="showContent('experiments', document.querySelector('[onclick*=experiments]'))">⬅ Back to Experiments</a>
+            <a href="#" onclick="loadExpContent('${exp}','aim')">Aim</a>
+            <a href="#" onclick="loadExpContent('${exp}','theory')">Theory</a>
+            <a href="#" onclick="loadExpContent('${exp}','prelab')">Prelab</a>
+            <a href="#" onclick="loadExpContent('${exp}','procedure')">Procedure</a>
+            <a href="#" onclick="loadExpContent('${exp}','simulation')">Simulation</a>
+            <a href="#" onclick="loadExpContent('${exp}','postlab')">Postlab</a>
+            <a href="#" onclick="loadExpContent('${exp}','references')">References</a>
+        `;
+        document.getElementById("main-content").innerHTML =
+            `<div class="card"><h2 class="title">${exp.toUpperCase()}</h2>
+            <p class="desc">Select Aim, Theory, Prelab, etc. from the right sidebar.</p></div>`;
+    }
+
+    // Load inner content for experiment parts
+    function loadExpContent(exp, part) {
+        let title = part.charAt(0).toUpperCase() + part.slice(1);
+        let content = "";
+
+        if(exp === "PN Junction Diode" && part === "aim") {
+            content = `<p class="desc">To study the V–I characteristics of Silicon and Germanium P–N Junction diodes under forward and reverse bias conditions.</p>`;
+        } 
+        else if (exp === "PN Junction Diode" && part === "theory") {
+            content = `<p class="desc">
+               A PN junction diode is a two-terminal semiconductor device formed by joining a p-type and an n-type semiconductor. At equilibrium, a depletion region forms at the junction, acting as a potential barrier that prevents further carrier diffusion. When an external voltage is applied:<br><br>
+
+<b>Forward Bias:</b><br>
+               In forward bias, the P side is connected to the positive terminal and the N side to the negative terminal. The depletion layer narrows, allowing charge carriers to cross the junction easily, so current flows through the diode.<br><br>
+<b>Reverse Bias:</b><br>
+               In reverse bias, the P side is connected to the negative terminal and the N side to the positive terminal. The depletion layer widens, resistance increases, and almost no current flows until breakdown occurs.<br><br>
+<b>The ideal diode equation is:</b><br>
+               <b>I = Is(e<sup>V/(nVt)</sup> − 1)</b><br>
+where Is is the saturation current, V is the applied voltage, Vt is the thermal voltage (~25 mV at room temperature), and n is the ideality factor.<br><br>
+<b>Circuit Diagram:</b><br>
+<img src="pn.png" alt="PN Junction Circuit" width="800">
+</p>`;
+}
+ else if (exp === "PN Junction Diode" && part === "simulation") {
+    content = `
+        <p class="desc">Interactive Simulation of PN Junction Diode:</p>
+        <iframe src="finalpn.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+ else if (exp === "PN Junction Diode" && part === "procedure") {
+            content = `<p class="desc">
+1.	Select the diode type (Silicon or Germanium) from the drop-down menu.<br>
+2.	Choose the biasing mode (Forward Bias / Reverse Bias).<br>
+3.	Set the X-axis and Y-axis ranges (example: Voltage −10 V to +10 V, Current −20 mA to +20 mA).<br>
+4.	Enter a voltage value in the given box (start from 0 V).<br>
+5.	Note down the current reading shown in the graph/output.<br>
+6.	Increase the voltage in small steps (e.g., 0.1 V or 0.2 V for forward bias, 0.5 V or 1 V for reverse bias).<br>
+7.	Repeat the measurement of current for each applied voltage.<br>
+               
+       </p>`;
+        } 
+else if (exp === "PN Junction Diode" && part === "prelab") {
+    content = `
+        <p class="desc">Interactive prelab of PN Junction Diode:</p>
+        <iframe src="prelab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "PN Junction Diode" && part === "postlab") {
+    content = `
+        <p class="desc">Interactive postlab of PN Junction Diode:</p>
+        <iframe src="postlab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "PN Junction Diode" && part === "references") {
+            content = `<p class="desc">
+<b>Books:</b><br>
+1. Robert Boylestad, Louis Nashelsky- Electronic Devices And Circuit Theory,Prentice Hall Upper Saddle River, New Jersey Columbus, Ohio <br>
+2. Donald L. Schilling, Charles Belove -Electronic Circuits: Discrete And Integrated, McGraw-Hill Book Company New York St. Louis San Francisco Toronto London Sydney <br>
+3. David J. Bates, Albert Malvino- Electronic Principles, Tata McGraw-Hill Education Pvt. Ltd., 2013 <br>
+  </p>`;
+}
+
+else if(exp === "Binary Adders" && part === "aim") {
+            content = `<p class="desc">To design a combinational circuit that adds two binary inputs with and without a carry input.</p>`;
+        } 
+        else if (exp === "Binary Adders" && part === "theory") {
+            content = `<p class="desc">
+<b>Half Adder:</b><br>
+
+               A Binary adder is a circuit which is able to add together two binary numbers. The half adder adds two binary digits an addend and an augend to produce a sum and carry. The sum can be implemented by using an Exclusive OR gate and an AND gate can be used for carry generation. The Boolean expression for the sum and carry are:<br>
+Sum = A B̅ + A̅ B = A xor B<br>
+Carry = A B <br>
+<b>Logic Diagram:</b><br>
+<img src="halfadder.png" alt="Binary Adders" width="400"><br>
+
+<b>Full Adder:</b><br>
+The full adder adds an addend, an augend and carry input generated by the previous stage 
+addition. It has two outputs, sum and carry. Full adder circuit can be implemented using 
+AND,OR and EX-OR gates..The sum and carry outputs of a full adder can be expressed as:<br>
+Sum = A ⊕ B ⊕ Cin<br>
+Carry = AB + BCin + ACin<br>
+               
+<b>Logic Diagram:</b><br>
+<img src="fulladder.png" alt="Binary Adders" width="500">
+</p>`;
+}
+ else if (exp === "Binary Adders" && part === "simulation") {
+    content = `
+        <p class="desc">Interactive Simulation of Binary Adders:</p>
+        <iframe src="halfadder.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+ else if (exp === "Binary Adders" && part === "procedure") {
+            content = `<p class="desc">
+1.	Select the adder type as Half Adder or Full Adder from the control menu.<br>
+2.	Set the input values for A, B, and Cin (for Full Adder).<br>
+3.	Observe the corresponding logic circuit diagram displayed.<br>
+4.	Note the Sum and Carry outputs in the truth table and waveform.<br>
+5.	Compare the results with the theoretical values and record the observations.<br>
+
+               
+       </p>`;
+        } 
+else if (exp === "Binary Adders" && part === "prelab") {
+    content = `
+        <p class="desc">Interactive prelab of Binary Adders:</p>
+        <iframe src="fprelab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "Binary Adders" && part === "postlab") {
+    content = `
+        <p class="desc">Interactive postlab of Binary Adders:</p>
+        <iframe src="fpostlab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "Binary Adders" && part === "references") {
+            content = `<p class="desc">
+<b>Books:</b><br>
+1. Morris Mano M, Michael D. Ciletti, Digital Design with an Introduction to the Verilog HDL, 5th ed., Pearson Education, 2014.<br>
+2. Charles H Roth (Jr), Larry L. Kinney, Fundamentals of Logic Design, 5th ed., Cengage  Learning India Edition, 2010 .  <br>
+3. Thomas L. Floyd, Digital Fundamentals, 10th ed., Pearson Education, 2013. <br>
+  </p>`;
+}
+else if(exp === "8:3 Encoder" && part === "aim") {
+            content = `<p class="desc">To design and verify the truth table for 8-3 Encoder.</p>`;
+        } 
+        else if (exp === "8:3 Encoder" && part === "theory") {
+            content = `<p class="desc">
+<b>8:3 Encoder:</b><br>
+
+               Encoder takes all the data inputs one at a time and converts them to a single encoded output, it is a multi-input data line, combinational logic circuit that converts the logic level 1 data at its input to an equivalent binary code at its output. Encoder has 2n input lines with common types that include 4 to 2,8 to 3 & 16 to 4 line configuration. Encoders are available to encode either a decimal or hexadecimal input pattern to typically binary or BCD output code.<br>
+D3 = I4 +I5 +I6 +I7 <br>
+D2 = I2 +I3 +I6 +I7 <br>
+D1 = I1 +I3 +I5 +I7 <br>
+<b>Logic Diagram:</b><br>
+<img src="83encoder.png" alt="8:3 Encoder" width="400"><br>
+</p>`;
+}
+ else if (exp === "8:3 Encoder" && part === "simulation") {
+    content = `
+        <p class="desc">Interactive Simulation of 8:3 Encoder:</p>
+        <iframe src="83 encoder.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+ else if (exp === "8:3 Encoder" && part === "procedure") {
+            content = `<p class="desc">
+1.	Select one active input (I₀–I₇).<br>
+2.	Note the 3-bit encoded output (D₂D₁D₀).<br>
+3.	Verify output using logic expressions<br>
+4.	Record values in the truth table.<br>
+5.	Observe and export the waveform.<br>
+
+               
+       </p>`;
+        } 
+else if (exp === "8:3 Encoder" && part === "prelab") {
+    content = `
+        <p class="desc">Interactive prelab of 8:3 Encoder:</p>
+        <iframe src="Encoder Prelab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "8:3 Encoder" && part === "postlab") {
+    content = `
+        <p class="desc">Interactive postlab of 8:3 Encoder:</p>
+        <iframe src="Encoder Postlab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "8:3 Encoder" && part === "references") {
+            content = `<p class="desc">
+<b>Books:</b><br>
+1. Morris Mano M, Michael D. Ciletti, Digital Design with an Introduction to the Verilog HDL, 5th ed., Pearson Education, 2014. <br>
+2. Charles H Roth (Jr), Larry L. Kinney, Fundamentals of Logic Design, 5th ed., Cengage  Learning India Edition, 2010 .  <br>
+3. Thomas L. Floyd, Digital Fundamentals, 10th ed., Pearson Education, 2013. <br>
+  </p>`;
+}
+else if (exp === "3:8 Decoder" && part === "aim") {
+    content = `<p class="desc">To design and verify the truth table for a 3-to-8 Decoder.</p>`;
+} 
+else if (exp === "3:8 Decoder" && part === "theory") {
+    content = `<p class="desc">
+<b>3:8 Decoder:</b><br>
+A decoder is a combinational logic circuit that converts binary information from <i>n</i> input lines to a maximum of 2ⁿ unique output lines.  
+For a 3:8 decoder, there are 3 input lines and 8 output lines.  
+Each output corresponds to one of the minterms of the input variables.<br><br>
+
+<b>Truth Table:</b><br>
+For inputs A₂, A₁, A₀, outputs Y₀–Y₇ are active low or high depending on implementation.<br><br>
+
+<b>Logic Equations:</b><br>
+Y₀ = A̅₂A̅₁A̅₀<br>
+Y₁ = A̅₂A̅₁A₀<br>
+Y₂ = A̅₂A₁A̅₀<br>
+Y₃ = A̅₂A₁A₀<br>
+Y₄ = A₂A̅₁A̅₀<br>
+Y₅ = A₂A̅₁A₀<br>
+Y₆ = A₂A₁A̅₀<br>
+Y₇ = A₂A₁A₀<br><br>
+
+<b>Logic Diagram:</b><br>
+<img src="38decoder.png" alt="3:8 Decoder" width="400"><br>
+</p>`;
+}
+else if (exp === "3:8 Decoder" && part === "simulation") {
+    content = `
+        <p class="desc">Interactive Simulation of 3:8 Decoder:</p>
+        <iframe src="38decoder.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "3:8 Decoder" && part === "procedure") {
+    content = `<p class="desc">
+1. Connect the input switches A₂, A₁, A₀.<br>
+2. Observe the output LEDs Y₀–Y₇.<br>
+3. Apply all 8 possible combinations of inputs.<br>
+4. Record the corresponding output in the truth table.<br>
+5. Verify that only one output is active for each input combination.<br>
+    </p>`;
+}
+else if (exp === "3:8 Decoder" && part === "prelab") {
+    content = `
+        <p class="desc">Interactive prelab of 3:8 Decoder:</p>
+        <iframe src="Decoder_Prelab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "3:8 Decoder" && part === "postlab") {
+    content = `
+        <p class="desc">Interactive postlab of 3:8 Decoder:</p>
+        <iframe src="Decoder_Postlab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "3:8 Decoder" && part === "references") {
+    content = `<p class="desc">
+<b>Books:</b><br>
+1. Morris Mano M, Michael D. Ciletti, <i>Digital Design with an Introduction to the Verilog HDL</i>, 5th ed., Pearson Education, 2014.<br>
+2. Charles H. Roth Jr., Larry L. Kinney, <i>Fundamentals of Logic Design</i>, 5th ed., Cengage Learning India Edition, 2010.<br>
+3. Thomas L. Floyd, <i>Digital Fundamentals</i>, 10th ed., Pearson Education, 2013.<br>
+</p>`;
+}
+else if(exp === "Rectifiers Circuit" && part === "aim") {
+            content = `<p class="desc">To construct half-wave and full-wave diode rectifier circuits and analyze their output waveforms, ripple factor, and efficiency. Also to sketch simple input and output waveforms.</p>`;
+        } 
+        else if (exp === "Rectifiers Circuit" && part === "theory") {
+            content = `<p class="desc">
+<b>Halfwave Rectifier:</b><br>
+
+              A rectifier is an electronic device that changes alternating current (AC) into direct current (DC). In a half-wave rectifier, only one diode is used. During the positive half cycle of the AC signal, the diode conducts and allows current to pass through the load, producing an output. During the negative half cycle, the diode blocks the current, and the output becomes zero. To make the output smoother, a capacitor is connected as a filter. The capacitor charges during the positive half cycle and slowly discharges when the input voltage drops, reducing the fluctuations in the output. This produces a smoother DC voltage with small ripples instead of sharp pulses.<br>
+<b>Circuit Diagram:</b><br>
+<img src="hwave.png" alt="Binary Adders" width="600"><br>
+
+<b>Fullwave Rectifier:</b><br>
+A practical half wave rectifier with a resistive load is shown in the circuit diagram. It consists of two 
+half wave rectifiers connected to a common load. One rectifies during positive half cycle of the input 
+and the other rectifying the negative half cycle. The transformer supplies the two diodes (D1 and D2) 
+with sinusoidal input voltages that are equal in magnitude but opposite in phase. During input positive 
+half cycle, diode D1 is ON and diode D2 is OFF. During negative half cycle D1 is OFF and diode D2 
+is ON. Peak Inverse Voltage (PIV) is the maximum voltage that has to be withstand by a diode when 
+it is reverse biased. Peak inverse voltage for Full Wave Rectifier is 2Vm because the entire secondary 
+voltage appears across the non-conducting diode.<br>
+               
+<b>Circuit Diagram:</b><br>
+<img src="fwave.png" alt="Binary Adders" width="600">
+</p>`;
+}
+ else if (exp === "Rectifiers Circuit" && part === "simulation") {
+    content = `
+        <p class="desc">Interactive Simulation of Rectifiers Circuit:</p>
+        <iframe src="rectifier circuit.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+ else if (exp === "Rectifiers Circuit" && part === "procedure") {
+            content = `<p class="desc">
+1.	Select the adder type as Half Adder or Full Adder from the control menu.<br>
+2.	Set the input values for A, B, and Cin (for Full Adder).<br>
+3.	Observe the corresponding logic circuit diagram displayed.<br>
+4.	Note the Sum and Carry outputs in the truth table and waveform.<br>
+5.	Compare the results with the theoretical values and record the observations.<br>
+
+               
+       </p>`;
+        } 
+else if (exp === "Rectifiers Circuit" && part === "prelab") {
+    content = `
+        <p class="desc">Interactive prelab of Rectifiers Circuit:</p>
+        <iframe src="fprelab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "Rectifiers Circuit" && part === "postlab") {
+    content = `
+        <p class="desc">Interactive postlab of Binary Adders:</p>
+        <iframe src="fpostlab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "Rectifiers Circuit" && part === "references") {
+            content = `<p class="desc">
+<b>Books:</b><br>
+1. Robert Boylestad, Louis Nashelsky- Electronic Devices And Circuit Theory,Prentice Hall Upper Saddle River, New Jersey Columbus, Ohio <br>
+2. Donald L. Schilling, Charles Belove -Electronic Circuits: Discrete And Integrated, McGraw-Hill Book Company New York St. Louis San Francisco Toronto London Sydney <br>
+3. David J. Bates, Albert Malvino- Electronic Principles, Tata McGraw-Hill Education Pvt. Ltd., 2013 <br>
+  </p>`;
+}
+
+else if(exp === "clipper" && part === "aim") {
+            content = `<p class="desc">To study diode clipper circuits (positive and negative) and understand how the clipping level depends on the reference voltage</p>`;
+        } 
+        else if (exp === "clipper" && part === "theory") {
+            content = `<p class="desc">
+               A clipper is a nonlinear circuit that removes part of an input signal without distorting the rest. It limits the voltage to a set level using diodes, resistors, and sometimes DC sources. Clippers are of various types — series, shunt, positive, negative, and biased.<br><br>
+
+               In a positive clipper, the diode conducts during the positive half-cycle, cutting off that part of the waveform. In a negative clipper, the diode conducts during the negative half-cycle, removing it. A biased clipper uses an additional DC voltage to set the clipping level above or below zero.<br>
+<b>Circuit Diagram:</b><br>
+<img src="clippercircuit.png" alt="Diode clipper circuit" width="800">
+</p>`;
+}
+ else if (exp === "clipper" && part === "simulation") {
+    content = `
+        <p class="desc">Interactive Simulation of Diode clipper:</p>
+        <iframe src="Clipper.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+ else if (exp === "clipper" && part === "procedure") {
+            content = `<p class="desc">
+1.	Select clipper type (+ve or –ve).<br>
+2.	Set input amplitude and frequency.<br>
+3.               Adjust DC offset and clip level.<br>
+4.               Set diode drop (Vd) and samples.<br>
+5.               Click Redraw and observe clipping on graph.<br>
+
+       </p>`;
+        } 
+else if (exp === "clipper" && part === "prelab") {
+    content = `
+        <p class="desc">Interactive prelab of Diode clipper:</p>
+        <iframe src="clipperprelab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "clipper" && part === "postlab") {
+    content = `
+        <p class="desc">Interactive postlab of Diode clipper:</p>
+        <iframe src="clipperpostlab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "clipper" && part === "references") {
+            content = `<p class="desc">
+<b>Books:</b><br>
+1. Robert Boylestad, Louis Nashelsky- Electronic Devices And Circuit Theory,Prentice Hall Upper Saddle River, New Jersey Columbus, Ohio <br>
+2. Donald L. Schilling, Charles Belove -Electronic Circuits: Discrete And Integrated, McGraw-Hill Book Company New York St. Louis San Francisco Toronto London Sydney <br>
+3. David J. Bates, Albert Malvino- Electronic Principles, Tata McGraw-Hill Education Pvt. Ltd., 2013 <br>
+  </p>`;
+}
+else if(exp === "MOSFET" && part === "aim") {
+            content = `<p class="desc">To simulate the drain and transfer characteristics of a MOSFET and to determine its drain resistance (r<sub>d</sub>) and transconductance (g<sub>m</sub>).</p>`;
+        } 
+        else if (exp === "MOSFET" && part === "theory") {
+            content = `<p class="desc">
+               A MOSFET (Metal Oxide Semiconductor Field Effect Transistor) controls current flow between the drain and source terminals using a voltage applied at the gate. It can be n-channel or p-channel, depending on the type of charge carriers. MOSFETs operate in two modes:<br><br>
+                                                               <b>Enhancement mode: .</b> Normally OFF; turns ON when gate voltage exceeds the threshold.<br>
+                                                               <b>Depletion mode:.</b>  Normally ON; turns OFF when gate voltage is reduced below the threshold.</b><br>
+           
+<img src="mosfetcircuit.png" alt="MOSFET" width="600">
+</p>`;
+}
+ else if (exp === "MOSFET" && part === "simulation") {
+    content = `
+        <p class="desc">Interactive Simulation of MOSFET:</p>
+        <iframe src="MOSFET.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+ else if (exp === "MOSFET" && part === "procedure") {
+            content = `<p class="desc">
+1.	Choose Characteristics Mode: Use the Experiment Selection dropdown to pick eitherTransfer Characteristics (I<sub>D</sub> vs V<sub>GS</sub>) or Drain Characteristics (I<sub>D</sub> vs V<sub>DS</sub>).<br>
+2.	Set Physical Parameters: Adjust the Threshold Voltage (V<sub>th</sub>) slider to the desired value (e.g., 2V).<br>
+3.  For Transfer Characteristics, set a constant Drain-Source Voltage (V<sub>DS</sub>) using the constant voltage slider.<br>
+4.  For Drain Characteristics, set a constant Gate-Source Voltage (V<sub>GS</sub>), ensuring it is higher than V<sub>th</sub> for the device to conduct.<br>
+5.  Use the Adjust slider to move the variable voltage in small steps (e.g., 0.1V increments for V<sub>GS</sub> or 0.5V for V<sub>DS</sub>).<br>
+6.  Click the Add Point button after every adjustment to save the V<sub>GS</sub>, V<sub>DS</sub>, and I<sub>D</sub> (mA) values to the data table.<br>
+7.  After collecting at least two data points, click Plot Characteristics to visualize the curve on the chart.<br>
+8.  Review the slopes to determine resistance or transconductance, then click Download Excel to save your final results.<br>
+
+       </p>`;
+        } 
+else if (exp === "MOSFET" && part === "prelab") {
+    content = `
+        <p class="desc">Interactive prelab of MOSFET:</p>
+        <iframe src="MOSFETPRELAB.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "MOSFET" && part === "postlab") {
+    content = `
+        <p class="desc">Interactive postlab of MOSFET:</p>
+        <iframe src="MOSFETPOSTLAB.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "MOSFET" && part === "references") {
+            content = `<p class="desc">
+<b>Books:</b><br>
+1. Robert Boylestad, Louis Nashelsky- Electronic Devices And Circuit Theory,Prentice Hall Upper Saddle River, New Jersey Columbus, Ohio <br>
+2. Donald L. Schilling, Charles Belove -Electronic Circuits: Discrete And Integrated, McGraw-Hill Book Company New York St. Louis San Francisco Toronto London Sydney <br>
+3. David J. Bates, Albert Malvino- Electronic Principles, Tata McGraw-Hill Education Pvt. Ltd., 2013 <br>
+  </p>`;
+}
+
+else if(exp === "BJT" && part === "aim") {
+            content = `<p class="desc">To simulate the Input and Output characteristics of a BJT and to determine its Input resistance (h<sub>ie</sub>) and Current gain (h<sub>fe</sub>).</p>`;
+        } 
+        else if (exp === "BJT" && part === "theory") {
+            content = `<p class="desc">
+                <h2 style="color:#388e3c; font-size:24px;" > BJT Theory (Common Emitter Configuration) </h2>
+    <div style="color:black; font-size:16px;">
+        <p>A Bipolar Junction Transistor (BJT) is a three-terminal, current-controlled device. In the **Common Emitter (CE)** configuration, the emitter is common to both the input (Base-Emitter) and output (Collector-Emitter) circuits. This configuration is widely used for **voltage amplification**.</p>
+        
+        <h3>Key BJT Parameters and Formulas</h3>
+<ul style="font-size:16px; color:black;">
+  <li><b>Current Relationship:</b> The emitter current (I<sub>E</sub>) is the sum of the collector current (I<sub>C</sub>) and the base current (I<sub>B</sub>):<br>
+      <b>I<sub>E</sub> = I<sub>C</sub> + I<sub>B</sub></b>
+  </li>
+  
+  <li><b>Current Gain (&beta;):</b> The DC current gain is the ratio of collector current to base current in the Active region:<br>
+      <b>&beta;<sub>DC</sub> = I<sub>C</sub> / I<sub>B</sub></b>
+  </li>
+  
+  <li><b>Active Region Collector Current (with Early Effect):</b><br>
+      <b>I<sub>C</sub> &asymp; &beta; &middot; I<sub>B</sub> &middot; (1 + V<sub>CE</sub> / V<sub>A</sub>)</b><br>
+      Where V<sub>A</sub> is the <b>Early Voltage</b>.
+  </li>
+  
+  <li><b>Input (Base) Current (Diode Model):</b><br>
+      <b>I<sub>B</sub> = I<sub>S</sub> ( e<sup>V<sub>BE</sub> / V<sub>T</sub></sup> - 1 )</b><br>
+      Where I<sub>S</sub> is the <b>saturation current</b> and V<sub>T</sub> is the <b>thermal voltage</b> (&asymp; 25&nbsp;mV at 300&nbsp;K).
+  </li>
+</ul>
+
+<img src="BJT.png" alt="BJT" width="600">
+</p>`;
+}
+ else if (exp === "BJT" && part === "simulation") {
+    content = `
+        <p class="desc">Interactive Simulation of BJT:</p>
+        <iframe src="BJT.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+ else if (exp === "BJT" && part === "procedure") {
+            content = `<p class="desc">
+<ol style="font-size:18px; color:black;">
+  <li>Select the <b>BJT Type</b> (<i>NPN</i> or <i>PNP</i>) from the control panel and click <b>Plot</b> to ensure the simulation is configured correctly.</li>
+  <li>Fix V<sub>CE</sub> = 1 V and sweep V<sub>BE</sub> to measure I<sub>B</sub> for the <b>Input Characteristic</b> curve.</li>
+  <li>Fix I<sub>B</sub> to a small, constant value (e.g., 10&nbsp;&micro;A) to set the condition for the <b>Output Characteristic</b> curve measurement.</li>
+  <li>Sweep V<sub>CE</sub> from 0 V to 10 V and measure the resulting I<sub>C</sub> to plot the first <b>Output Characteristic</b> curve.</li>
+  <li>Download the <b>Input</b> and <b>Output</b> data if needed.</li>
+</ol>
+
+       </p>`;
+        } 
+else if (exp === "BJT" && part === "prelab") {
+    content = `
+        <p class="desc">Interactive prelab of BJT:</p>
+        <iframe src="BJT_Prelab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "BJT" && part === "postlab") {
+    content = `
+        <p class="desc">Interactive postlab of BJT:</p>
+        <iframe src="BJT_Postlab.html" width="100%" height="600" 
+            style="border:1px solid #ccc; border-radius:8px;"></iframe>
+    `;
+}
+else if (exp === "BJT" && part === "references") {
+            content = `<p class="desc">
+<b>Books:</b><br>
+1. Robert Boylestad, Louis Nashelsky- Electronic Devices And Circuit Theory,Prentice Hall Upper Saddle River, New Jersey Columbus, Ohio <br>
+2. Donald L. Schilling, Charles Belove -Electronic Circuits: Discrete And Integrated, McGraw-Hill Book Company New York St. Louis San Francisco Toronto London Sydney <br>
+3. David J. Bates, Albert Malvino- Electronic Principles, Tata McGraw-Hill Education Pvt. Ltd., 2013 <br>
+  </p>`;
+}
+
+
+else {
+            content = `<p class="desc">Content for ${exp.toUpperCase()} - ${title} goes here...</p>`;
+        }
+
+        document.getElementById("main-content").innerHTML =
+            `<div class="card"><h2 class="title">${exp.toUpperCase()} - ${title}</h2>${content}</div>`;
+    }
+
+</script>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-left">
+        <img src="logo.png" alt="Virtual Labs" class="logo">
+        <img src="ECE.jpg" alt="Electronics Lab" class="header-photo">
+    </div>
+</div>
+
+<div class="topbar">
+    <a href="https://www.srmist.edu.in/department/department-of-electronics-communication/" target="_blank">HOME</a>
+    <a href="#">CONTACT</a>
+</div>
+<div class="container">
+    <div class="sidebar">
+        <a href="#" class="active" onclick="showContent('introduction', this)">Introduction</a>
+        <a href="#" onclick="showContent('objective', this)">Objective</a>
+        <a href="#" onclick="showContent('experiments', this)">List of Experiments</a>
+        <a href="#" onclick="showContent('audience', this)">Target Audience</a>
+        <a href="#" onclick="showContent('feedback', this)">Feedback</a>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="content" id="main-content">
+            <div class="card">
+                <h2 class="title">21ECC211L - Devices and Digital IC Lab</h2>
+                <p class="desc">
+                    Welcome to the Devices and Digital IC Lab. Select a section from the left sidebar to get started.
+                </p>
+            </div>
+        </div>
+        <div class="wave"></div>
+    </div>
+
+    <div class="rightbar"></div>
+</div>
+
+</body>
+</html>

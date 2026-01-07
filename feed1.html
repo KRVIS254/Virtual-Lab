@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Feedback</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      /* ✅ Professional soft gradient background */
+      background: linear-gradient(135deg, #eef2f7, #d9e2ec);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .panel {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 6px 16px rgba(0,0,0,0.08);
+      max-width: 750px;
+      width: 95%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2a4365;
+    }
+
+    label {
+      font-weight: 500;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      border: 1px solid #ccd0d5;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .rating label {
+      display: inline-block;
+      margin-right: 12px;
+      font-weight: normal;
+      cursor: pointer;
+    }
+
+    .question {
+      margin: 18px 0;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      background: #2b6cb0;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #1e4e85;
+    }
+  </style>
+</head>
+<body>
+  <div id="panel7" class="panel">
+    <h2>Feedback</h2>
+    <form id="feedbackFormPanel">
+
+      <label for="name_p">Student Name:</label>
+      <input type="text" id="name_p" name="name" required>
+
+      <label for="roll_p">Roll No:</label>
+      <input type="text" id="roll_p" name="roll" required>
+
+      <label for="email_p">Email ID:</label>
+      <input type="email" id="email_p" name="email">
+
+      <!-- Question 1 -->
+      <div class="question">
+        <label style="display:block; margin-bottom:10px;">
+          (<span style="color:red;">1</span> is Lowest and <span style="color:red;">5</span> is Highest)
+        </label>
+        <label>1. How easy was it to navigate and use the Virtual Lab platform?</label>
+        <div class="rating">
+          <label><input type="radio" name="fb_q1" value="1" required> 1</label>
+          <label><input type="radio" name="fb_q1" value="2"> 2</label>
+          <label><input type="radio" name="fb_q1" value="3"> 3</label>
+          <label><input type="radio" name="fb_q1" value="4"> 4</label>
+          <label><input type="radio" name="fb_q1" value="5"> 5</label>
+        </div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="question">
+        <label>2. Did the platform provide a clear and realistic simulation of the experiments?</label>
+        <div class="rating">
+          <label><input type="radio" name="fb_q2" value="1" required> 1</label>
+          <label><input type="radio" name="fb_q2" value="2"> 2</label>
+          <label><input type="radio" name="fb_q2" value="3"> 3</label>
+          <label><input type="radio" name="fb_q2" value="4"> 4</label>
+          <label><input type="radio" name="fb_q2" value="5"> 5</label>
+        </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="question">
+        <label>3. How useful was the virtual lab in understanding of Electronics Devices?</label>
+        <div class="rating">
+          <label><input type="radio" name="fb_q3" value="1" required> 1</label>
+          <label><input type="radio" name="fb_q3" value="2"> 2</label>
+          <label><input type="radio" name="fb_q3" value="3"> 3</label>
+          <label><input type="radio" name="fb_q3" value="4"> 4</label>
+          <label><input type="radio" name="fb_q3" value="5"> 5</label>
+        </div>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="question">
+        <label>4. Was the simulation interface user-friendly?</label>
+        <div class="rating">
+          <label><input type="radio" name="fb_q4" value="Yes" required> Yes</label>
+          <label><input type="radio" name="fb_q4" value="No"> No</label>
+        </div>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="question" style="display:flex; align-items:center; gap:10px;">
+        <label for="strengths_p" style="flex:0 0 auto;">5. What did you like most about the virtual lab?</label>
+        <textarea id="strengths_p" name="strengths" rows="3" style="flex:1; max-width:400px;"></textarea>
+      </div>
+
+      <!-- Question 6 -->
+      <div class="question" style="display:flex; align-items:center; gap:10px;">
+        <label for="improvements_p" style="flex:0 0 auto;">6. What improvements would you suggest?</label>
+        <textarea id="improvements_p" name="improvements" rows="3" style="flex:1; max-width:400px;"></textarea>
+      </div>
+
+      <!-- Question 7 -->
+      <div class="question">
+        <label for="overall_p">7. Overall Rating:</label>
+        <select id="overall_p" name="overall" required>
+          <option value="">-- Select --</option>
+          <option>Excellent</option>
+          <option>Good</option>
+          <option>Average</option>
+          <option>Poor</option>
+        </select>
+      </div>
+
+      <button type="submit">Submit Feedback</button>
+    </form>
+  </div>
+
+  <script>
+    const FEEDBACK_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8LMqrQNV8Gw0nEIqTymqboWz2ATgRhUCGtzegHt0l_XB3CMVdULYorgykq_k14pCa/exec";
+    document.getElementById("feedbackFormPanel").addEventListener("submit", e => {
+      e.preventDefault();
+      const formData = {
+        name: document.getElementById("name_p").value,
+        roll: document.getElementById("roll_p").value,
+        email: document.getElementById("email_p").value,
+        q1: document.querySelector("input[name='fb_q1']:checked").value,
+        q2: document.querySelector("input[name='fb_q2']:checked").value,
+        q3: document.querySelector("input[name='fb_q3']:checked").value,
+        q4: document.querySelector("input[name='fb_q4']:checked").value,
+        strengths: document.getElementById("strengths_p").value,
+        improvements: document.getElementById("improvements_p").value,
+        overall: document.getElementById("overall_p").value
+      };
+      fetch(FEEDBACK_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(formData)
+      })
+      .then(res => res.json())
+      .then(res => {
+        alert("✅ Thank you! Your feedback has been submitted.");
+        document.getElementById("feedbackFormPanel").reset();
+      })
+      .catch(err => {
+        alert("❌ Error submitting feedback. Please try again.");
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
